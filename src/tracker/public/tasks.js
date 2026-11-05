@@ -146,6 +146,7 @@ export function outreachSection(ctx, a) {
       const full = m.subject ? `Subject: ${m.subject}\n\n${m.text}` : m.text;
       return h('div', { class: 'msg' },
         h('div', { class: 'msg-head' }, h('b', null, MSG_LABEL[m.kind] ?? m.kind), h('span', { class: 'muted' }, ` · ${CH_LABEL[m.channel] ?? m.channel} · ${m.text.length} chars`), h('span', { class: 'grow' }), copyBtn(full, MSG_LABEL[m.kind] ?? 'message')),
+        h('div', { class: 'muted' }, `${m.status ?? 'drafted'}${m.sentAt ? ` · ${m.sentAt.slice(0, 10)}` : ''}${m.nextFollowupDate ? ` · follow up ${m.nextFollowupDate}` : ''}`),
         m.subject ? h('div', { class: 'msg-subject' }, m.subject) : null,
         h('pre', { class: 'msg-text' }, m.text));
     };
@@ -154,6 +155,12 @@ export function outreachSection(ctx, a) {
         h('b', null, c.name), c.title ? h('span', { class: 'muted' }, ` · ${c.title}`) : null,
         h('span', { class: `chip ${c.confidence === 'confirmed' ? 'qf-high' : 'plain'}` }, KIND_LABEL[c.kind]),
         c.confidence !== 'confirmed' ? h('span', { class: 'chip plain', title: 'Title or role not confirmed by the source' }, 'unconfirmed') : null),
+      h('div', { class: 'contact-links' },
+        h('span', { class: 'chip plain' }, c.relationship === 'unknown' || !c.relationship ? 'Connection not checked' : c.relationship),
+        c.route ? h('span', { class: 'chip plain' }, `Route: ${c.route}`) : null,
+        h('span', { class: 'chip plain' }, c.status ?? 'not-contacted'),
+        c.nextFollowupDate ? h('span', { class: 'muted' }, `Follow up ${c.nextFollowupDate}`) : null),
+      c.reason ? h('p', { class: 'hint-line' }, c.reason) : null,
       h('div', { class: 'contact-links' },
         c.linkedin ? h('a', { href: c.linkedin, target: '_blank', rel: 'noopener noreferrer' }, icon('link', 11), ' LinkedIn') : null,
         c.email ? [h('span', { class: 'muted' }, c.email), copyBtn(c.email, 'email')] : null,
@@ -165,7 +172,7 @@ export function outreachSection(ctx, a) {
     body.replaceChildren(...[
       o.searches.length ? h('div', { class: 'file-list' }, o.searches.map((s) => h('a', { class: 'chip file', href: s.url, target: '_blank', rel: 'noopener noreferrer' }, icon('search', 11), s.label))) : null,
       ...people, ...others,
-      h('p', { class: 'hint-line' }, 'Drafts only. Send them yourself, then note it on the timeline.')].filter(Boolean));
+      h('p', { class: 'hint-line' }, 'Ask Claude to send a specific message or connection request. Review its text and recipient in chat; sent items and follow-ups appear here.')].filter(Boolean));
   }).catch(() => body.replaceChildren(h('span', { class: 'muted' }, 'Could not load outreach.')));
   return sec;
 }

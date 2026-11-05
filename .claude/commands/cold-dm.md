@@ -34,6 +34,12 @@ Confirm, from sources fetched this session (`evaluation.md` section 6, cache in
   URL-encoded) instead of guessing profiles. Never guess email addresses; if the
   site lists a contact or careers email, use that.
 
+If asked to check LinkedIn connections or find contacts in the browser, use
+people.md. For engineering tracks, include the engineering lead or CTO when
+relevant. Retain at most 3 recommended contacts per company. Save contacts and
+messages in outreach.json using outreach.md's schema alongside the text files,
+so /send and the tracker can use them. Preserve existing IDs and send history.
+
 Unconfirmed → leave it out of the drafts.
 
 ## 3. Pick the angle
@@ -79,6 +85,10 @@ node bin/gaj.js track add --company "<Company>" --role "Open application (<track
 
 (Company name reduced per SKILL.md rule 13; `already tracked` → `--upsert`.)
 
-Tell the user: send it yourself, then run `/outcome <Company> applied` and
+Tell the user they can ask to send a specific message in chat, or send it
+themselves and report the result. Only mark sent after confirmation. Update
+`funded:set <id> --status contacted` after verified outreach; a message alone
+does not mean an application was submitted. For a submitted open application,
+record the outcome with `/outcome <Company> applied` and
 `node bin/gaj.js funded:set <id> --status contacted` (if it came from
 `/funded`). On a reply: `funded:set <id> --status replied` and `/outcome`.

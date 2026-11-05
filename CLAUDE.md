@@ -17,6 +17,20 @@ CLI flags: `docs/CONTRACTS.md`. Design: `docs/PLAN.md`.
 
 ## Commands
 
+## Chat interface
+
+Users do not need to type slash commands. For plain-language requests, read
+`.claude/skills/get-a-job/references/chat-workflow.md` and execute the matching
+command files as internal procedures. Continue through all requested stages;
+do not stop after discovery to suggest another command. Missing profile →
+onboard conversationally. "Find 100 jobs, rank them and find referrals" means
+collect, deduplicate, rank, save tracker rows, enrich contacts and open the
+localhost tracker. Use `.claude/commands/people.md` for LinkedIn connections.
+Persist progress so a new session can resume. Never promise a job count or
+claim a message/application succeeded without evidence.
+
+## Optional command shortcuts
+
 `/onboard` · `/preferences` · `/discover <criteria>` · `/browse [sites]` · `/apply <job>` · `/send <app> [msg]` · `/funded [criteria]` · `/cold-dm <company>` · `/scrape` · `/email-alerts` ·
 `/linkedin-alerts` · `/import-jobs` · `/digest` · `/gmail-sync` · `/rank` · `/tailor <url|key|JD>` · `/outreach <job|app>` · `/ats [pdf] [job]` · `/cover` ·
 `/interview <company> [stage]` · `/outcome <company> <what happened>` ·

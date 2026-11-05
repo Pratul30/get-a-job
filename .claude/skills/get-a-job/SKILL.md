@@ -87,6 +87,14 @@ re-derive the slug for an existing application.
 
 ## Workflow
 
+Natural-language requests are the primary interface. Read
+`references/chat-workflow.md` for multi-step requests, first-time setup,
+target counts, progress/resume and intent routing. Command files are internal
+procedures: execute them without asking the user to type their names.
+Read `.claude/commands/people.md` when asked to find LinkedIn connections,
+referrers or people to contact. A research request authorizes local collection,
+ranking and drafts, not sending connection requests or messages.
+
 `/onboard` → (`/discover` to grow the company list) → `/scrape` (plus
 `/browse` in the logged-in browser, `/email-alerts`, `/import-jobs`; daily via `/digest` + schedule) → `/rank` →
 `/tailor` → (`/cover`) → apply (user does

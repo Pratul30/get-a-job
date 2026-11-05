@@ -245,7 +245,10 @@ test('gaj jobs:import end to end (temp root)', () => {
     const run = (...args) => spawnSync(process.execPath, [path.join(REPO, 'bin', 'gaj.js'), ...args], { env: { ...process.env, GAJ_ROOT: root }, encoding: 'utf8' });
     fs.mkdirSync(path.join(root, 'data'), { recursive: true });
     const file = path.join(root, 'data', 'import.json');
-    fs.copyFileSync(path.join(FIX, 'import.json'), file);
+    const imported = JSON.parse(fs.readFileSync(path.join(FIX, 'import.json'), 'utf8'));
+    // Keep this CLI test about import/deduplication, independent of fixture age.
+    imported[0].postedAt = new Date().toISOString();
+    fs.writeFileSync(file, JSON.stringify(imported));
     const r = run('jobs:import', file, '--source', 'manual', '--json');
     assert.equal(r.status, 0, r.stderr);
     const s = JSON.parse(r.stdout);

@@ -74,8 +74,7 @@ export function renderPipeline(ctx) {
   if (!ctx.apps.length) {
     wrap.append(emptyState({
       iconName: 'board', title: 'No applications yet',
-      body: 'Run /onboard in Claude Code to set up your profile, /scrape to find jobs, then /tailor <job> to draft a resume. Tracked jobs land here.',
-      cmds: ['/onboard', '/scrape', '/tailor <url>'],
+      body: 'Ask Claude to set up your profile, find matching jobs and create your tracker. Saved jobs and applications land here.',
       actions: [h('button', { class: 'btn sm primary', onclick: () => ctx.openNew() }, 'Add one manually')],
     }));
     return wrap;
@@ -164,7 +163,7 @@ export function renderTable(ctx) {
   const wrap = h('section', null,
     h('div', { class: 'view-head' }, h('div', null, h('h1', null, 'Applications'), h('p', null, 'Every application, sortable and filterable. Click a row for details.'))));
   if (!ctx.apps.length) {
-    wrap.append(emptyState({ iconName: 'board', title: 'Nothing tracked yet', body: 'Track jobs from the Jobs inbox, run /tailor <job url> in Claude Code, or add one manually.', cmds: ['/scrape', '/tailor <url>', 'gaj track add'] }));
+    wrap.append(emptyState({ iconName: 'board', title: 'Nothing tracked yet', body: 'Track jobs from the Jobs inbox, ask Claude to tailor a resume for a job, or add one manually.' }));
     return wrap;
   }
   wrap.append(h('div', { class: 'toolbar' },

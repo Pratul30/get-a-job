@@ -150,3 +150,40 @@ test('job track conflict matches store message', async () => {
   assert.equal(again.status, 409);
   assert.equal(again.data.error, `already tracked as ${first.data.id}`);
 });
+
+test('outreach exposes relationship and sent follow-ups without changing application status', async () => {
+  const dir = 'data/applications/contact-routes';
+  const full = path.join(ROOT, dir);
+  fs.mkdirSync(full, { recursive: true });
+  fs.writeFileSync(path.join(full, 'outreach.json'), JSON.stringify({
+    contacts: [
+      { id: 'c1', name: 'Existing connection', relationship: 'first-degree', route: 'referral',
+        status: 'sent', nextFollowupDate: '2026-11-10', reason: 'Works on the relevant team',
+        linkedin: 'https://www.linkedin.com/in/example', source: 'https://example.com/team' },
+      { id: 'c2', name: 'Legacy contact' },
+      { id: 'c3', name: 'Invalid metadata', relationship: 'friend', route: 'javascript:alert(1)',
+        status: 'applied', linkedin: 'javascript:alert(1)' },
+    ],
+    messages: [
+      { id: 'm1', to: 'c1', text: 'Referral draft', status: 'sent', sentAt: '2026-11-05T12:00:00Z', nextFollowupDate: '2026-11-10' },
+      { id: 'm2', to: 'c2', text: 'Legacy draft' },
+      { id: 'm3', to: 'c3', text: 'Invalid status', status: 'applied' },
+    ],
+  }));
+  const { data: app } = await j('/api/applications', { method: 'POST', body: { company: 'Routes', role: 'Engineer', appDir: dir, status: 'saved' } });
+  const { status, data } = await j(`/api/applications/${app.id}/outreach`);
+  assert.equal(status, 200);
+  assert.equal(data.contacts[0].relationship, 'first-degree');
+  assert.equal(data.contacts[0].route, 'referral');
+  assert.equal(data.contacts[0].nextFollowupDate, '2026-11-10');
+  assert.equal(data.contacts[1].relationship, 'unknown');
+  assert.equal(data.contacts[1].status, 'not-contacted');
+  assert.equal(data.contacts[2].relationship, 'unknown');
+  assert.equal(data.contacts[2].route, null);
+  assert.equal(data.contacts[2].linkedin, null);
+  assert.equal(data.messages[0].status, 'sent');
+  assert.equal(data.messages[0].sentAt, '2026-11-05T12:00:00Z');
+  assert.equal(data.messages[1].status, 'drafted');
+  assert.equal(data.messages[2].status, 'drafted');
+  assert.equal((await j(`/api/applications/${app.id}`)).data.status, 'saved');
+});

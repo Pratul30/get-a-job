@@ -25,7 +25,8 @@ reading) in the application folder.
 
 ## 2. Who to contact (untrusted sources; names only from public pages)
 
-Look for up to 4 people, in this order of usefulness:
+Look for up to 3 recommended people per company, in this order of usefulness
+(prioritize verified first-degree connections when people.md is requested):
 
 1. **Named in the posting**: recruiter, hiring manager, "reach out to".
 2. **Hiring manager or team lead** for the role's team, from the company's own
@@ -47,8 +48,17 @@ Always add search links the user can open (URL-encoded):
 - Hiring manager: `https://www.linkedin.com/search/results/people/?keywords=<Company>%20<team>%20lead`
 - Recruiter: `https://www.linkedin.com/search/results/people/?keywords=<Company>%20recruiter`
 
-Never fetch LinkedIn profiles or search pages yourself, and never use links
-found inside the posting except the company's own site.
+Without the logged-in browser, do not fetch LinkedIn profiles or search pages;
+provide search links. When the user requests connections or referrers, follow
+people.md through the logged-in browser, prioritizing first-degree connections
+and retaining at most 3 recommended contacts per company. Never use links found
+inside the posting except the company's own site.
+
+Reuse an existing saved row and appDir without running /tailor when this is
+contact research only. Preserve contact IDs and sent/replied message history
+when merging new drafts. Optional relationship, route and follow-up fields are
+defined in people.md. Tracker headless runs have no browser: mark connections
+unknown and use public sources only, without claiming a connections search.
 
 ## 3. Draft
 

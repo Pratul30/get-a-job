@@ -460,6 +460,54 @@ node bin/gaj.js jobs:import data/my-jobs.json --source manual
 # The file must be under data/ or the OS temp dir.
 ```
 
+## Chat setup for Claude Desktop
+
+Use **Code → local session → select this repository folder** in Claude
+Desktop. Regular Chat does not automatically load the repository's workflows;
+Cowork needs separate packaging and is not configured by this repo.
+
+One-time prerequisites: Git to clone/download the repo, Node.js 20+ and Google
+Chrome. Use a fresh clone for each person; profile, applications and browser
+sessions stay on their own machine. Do not copy another candidate's ignored
+personal files. In the Code tab, say:
+
+> Set up this repo for my job search. Install dependencies if needed, check
+> browser access, and help me create my profile from my resume.
+
+Claude can run `npm install` and the environment checks for you. Allow the
+project's Playwright MCP server when prompted (or enable it in the MCP settings
+and restart the session). The repo's `.mcp.json` uses `npx` and a persistent
+Chrome profile. If tools aren't available, Claude explains what's missing.
+When Chrome opens, log in yourself to whichever sites you want to use; say
+"done" to continue. A separate `~/.gaj-chrome` profile is used, not your existing
+Chrome tabs. Never paste passwords or session cookies into chat.
+
+Attach your CV or put it in `inbox/`. Claude asks about target roles, locations,
+work authorization and other missing facts, then saves your personal profile.
+After that, describe the outcome you want:
+
+> Find up to 100 matching jobs from different sites, rank each one, find my
+> existing LinkedIn connections who could refer me, otherwise suggest up to
+> 3 people per company to connect with or contact, and open my tracker.
+
+This authorizes research, local imports, ranking and drafts. It does not send
+100 messages. Ask about a specific job/person when ready to apply or send.
+The tracker opens locally and includes posting links, fit, gaps, contacts,
+drafts, activity history and next actions. Progress lives in the ignored
+`data/search-plan.json`; ask "continue my search" to resume.
+
+The Code tab runs the CLI behind the scenes, so you don't have to type slash
+commands. Tracker AI buttons additionally require the `claude` executable on
+PATH and an authenticated CLI session. If those buttons are unavailable, ask
+in the Code tab; browsing, drafting and tracker viewing don't require using
+the buttons.
+
+Email is optional. Gmail search/read access supports alert imports and reply
+checks; sending requires a tool with send access, and attachments require
+attachment support. A read-only Gmail connector is not sufficient for sending.
+Without send access, Claude saves drafts and continues the other work.
+Optional paid job providers and InMail are not required for the basic workflow.
+
 ## Browser mode (Playwright MCP)
 
 `/browse`, `/apply` and `/send` drive a Chrome window through the
@@ -472,7 +520,7 @@ reads your passwords.
    `@playwright/mcp`, pinned in `.mcp.json`).
 2. Start Claude Code in the repo and approve the `playwright` server when
    asked (or `/mcp` → playwright → enable).
-3. First run: `/browse`. A Chrome window opens; log in to LinkedIn, Wellfound,
+3. First run: say "find matching jobs in the browser" (or `/browse`). A Chrome window opens; log in to LinkedIn, Wellfound,
    Naukri, Instahyre and Cutshort in it, then tell Claude "done". Logins stay
    in `~/.gaj-chrome` for later runs.
 4. Next time: `/browse` or `/browse linkedin,wellfound fe`.
@@ -485,7 +533,8 @@ What to expect:
 - Claude opens its own tab, works one page at a time with pauses, and stops
   at caps (5 searches and 40 postings per site per run). It pauses on any
   login, CAPTCHA, OTP or "unusual activity" screen for you to handle.
-- Found jobs are shown as a table first; only the ones you pick are imported
+- Found jobs are shown as a table first. If you asked to add matching jobs to
+  your tracker, they are imported directly; otherwise choose what to import
   (`source: browser`).
 - `/apply <job>` submits and `/send <app>` sends only after you confirm that
   one item, with the full content shown first. Claude attaches the tailored

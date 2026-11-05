@@ -60,9 +60,12 @@ keep `applyType`, gate notes and quick fit in a separate
 
 Show one table, best first: # · fit · title · company · location/mode · posted
 · site · apply type · gate issue. Orange rows collapsed at the end.
-AskUserQuestion (multi-select over groups, then free text for numbers): add
+If the user already asked to find and add matching jobs or create their tracker,
+that authorizes importing matching candidates locally; proceed without another
+selection question. Otherwise AskUserQuestion (multi-select over groups, then free text for numbers): add
 all high, all high+medium, or pick by number. Nothing is imported without this
-answer.
+answer or prior authorization. Keep counts across a whole chat campaign; do not
+reset site caps by invoking this procedure again.
 
 ## 5. Import
 

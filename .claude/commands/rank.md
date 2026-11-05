@@ -14,6 +14,11 @@ reviewer). `/tailor` re-evaluates in depth later. Load
 - `--limit N`: max jobs to score this run (default 20).
 - `--top N`: shortlist size (default 8).
 - Remaining text: focus filter matched against title/company/track (e.g. `fe`, `healthtech`).
+- An exact job key or campaign's explicit key list selects those jobs regardless
+  of status, including imported/tracked rows. Query `jobs --json`, match exact
+  keys and score them; never treat a key as a title substring. A conversational
+  target larger than the batch limit is processed in consecutive batches until
+  every requested key is ranked or marked pending with its reason.
 
 ## 2. Select candidates
 

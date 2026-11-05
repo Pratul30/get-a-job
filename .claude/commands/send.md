@@ -39,8 +39,21 @@ Stop. Edits → apply, re-check, show again.
   agreed to a connection request; otherwise tell the user and stop. InMail
   needs credits: ask first.
 - Screenshot / capture the sent state.
+- No clear confirmation → record status `unknown`, inspect the thread before
+  retrying, and never click Send again merely because confirmation was slow.
 
 ## 4. Record
 
 `node bin/gaj.js track update <id> --note "sent: <kind> <channel> to <contact id> <yyyy-mm-dd>" --next-action "follow up" --next-date <today+5>`.
+On a verified send, merge into outreach.json: message `status: sent`, `sentAt`
+(ISO), `nextFollowupDate` (today+5), and contact `lastContactedAt`,
+`nextFollowupDate`, `status` (`connection-pending` for a connection request,
+`sent` for a message). Preserve IDs and other message history. A connection
+request does not mean a referral DM was sent; do not mark an application
+applied for either. Before sending, check for an existing sent message or
+pending connection to this person across applications; don't duplicate it.
+If a resume attachment was requested, tailor to this JD and show the exact
+PDF path in the review, then verify the attachment before sending. Email uses
+only a tool supporting attachments; without one, save a draft and explain the
+missing capability rather than claiming it was attached.
 Close the tab. Never send the same text to anyone else.

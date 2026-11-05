@@ -31,7 +31,40 @@ A local-first job search framework that runs inside [Claude Code](https://claude
 
 ## How to use it (start to finish)
 
-You talk to Claude in a terminal; it runs the steps for you. Commands starting with `/` are typed inside Claude Code.
+Talk to Claude in **Claude Desktop's Code tab** (a local session with this
+folder selected), or Claude Code in a terminal. Slash commands below are
+optional shortcuts; ordinary chat routes to the same procedures.
+
+For a friend setting this up, see [Chat setup for Claude Desktop](docs/SETUP.md#chat-setup-for-claude-desktop).
+
+For example:
+
+> Set up my job search from this resume. Ask me what else you need.
+
+> Find up to 100 jobs that fit my profile across different sites. Rank them,
+> create my tracker and find up to 3 relevant people per company, prioritizing
+> my LinkedIn connections. Include recently funded startups.
+
+> Apply to the backend role at Acme with a tailored resume.
+
+> Ask my connection at Acme for a referral. Show me the message first.
+
+> Who should I follow up with today?
+
+Claude runs collection, deduplication, ranking and requested contact research,
+saves progress locally and opens the tracker at `http://127.0.0.1:4317`.
+First-degree LinkedIn connections are checked through the logged-in browser;
+otherwise it can recommend a connection request, an available DM route, or a
+published email address. At most 3 people are recommended per company. The
+tracker shows relationship, suggested route, drafts, sent status and follow-up
+dates. Unknown connection status is shown explicitly.
+
+100 is a target, not a guaranteed result: available jobs, browser caps and
+login access determine coverage. Claude reports actual counts and pending
+research, and resumes saved work when asked. Sending and applying happen for
+specific items you request, after reviewing the final content and destination.
+Login prompts are handled by you in the browser. Inbox updates run when asked;
+there is no continuous reply monitor by default.
 
 **1. Install.** You need Node.js 20+ and [Claude Code](https://claude.com/claude-code). In the project folder:
 
@@ -107,7 +140,10 @@ Check how an ATS reads any resume PDF with `/ats`: a 0-100 score (parseability, 
 /cover Acme referral
 ```
 
-**9. Apply yourself.** Open the job link and submit. The tool never applies, sends email, or messages anyone for you.
+**9. Apply or send through chat.** Ask Claude to apply to a specific job or
+send a specific referral request, DM or email. It prepares the tailored resume
+and content, shows the destination and final details, then submits/sends after
+your approval. You can also open the link and apply yourself.
 
 **10. Track everything.** The tracker opens in your browser: a board of your applications by stage, a jobs inbox with **New** badges, stats, and a Settings tab where you can change preferences and run a search. You can export it to a spreadsheet or Google Sheets.
 

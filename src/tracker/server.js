@@ -151,12 +151,19 @@ export function createTrackerServer({ store = createStore(), port = 4317, meta =
       id: str(c?.id, 20) ?? `c${i + 1}`, name: str(c?.name, 120), title: str(c?.title, 160),
       kind: OUT_KINDS.includes(c?.kind) ? c.kind : 'employee', confidence: c?.confidence === 'confirmed' ? 'confirmed' : 'likely',
       source: link(c?.source), linkedin: link(c?.linkedin), email: mail(c?.email),
+      relationship: ['first-degree', 'second-degree', 'third-degree'].includes(c?.relationship) ? c.relationship : 'unknown',
+      route: ['referral', 'connect', 'dm', 'email', 'unavailable'].includes(c?.route) ? c.route : null,
+      reason: str(c?.reason, 500), checkedAt: str(c?.checkedAt, 40),
+      status: ['not-contacted', 'connection-pending', 'connected', 'sent', 'replied', 'declined', 'unknown'].includes(c?.status) ? c.status : 'not-contacted',
+      lastContactedAt: str(c?.lastContactedAt, 40), nextFollowupDate: str(c?.nextFollowupDate, 10),
     })).filter((c) => c.name);
     const searches = (Array.isArray(o.searches) ? o.searches : []).slice(0, 6).map((s) => ({ label: str(s?.label, 80), url: link(s?.url) })).filter((s) => s.label && s.url);
     const messages = (Array.isArray(o.messages) ? o.messages : []).slice(0, 20).map((m, i) => ({
       id: str(m?.id, 20) ?? `m${i + 1}`, kind: MSG_KINDS.includes(m?.kind) ? m.kind : 'cold',
       channel: MSG_CHANNELS.includes(m?.channel) ? m.channel : 'linkedin-dm', to: str(m?.to, 120),
       subject: str(m?.subject, 200), text: str(m?.text, 5000),
+      status: ['drafted', 'sent', 'replied', 'unknown'].includes(m?.status) ? m.status : 'drafted',
+      sentAt: str(m?.sentAt, 40), nextFollowupDate: str(m?.nextFollowupDate, 10),
     })).filter((m) => m.text);
     return { generatedAt: str(o.generatedAt, 40), contacts, searches, messages };
   }

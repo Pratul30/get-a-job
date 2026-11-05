@@ -326,3 +326,23 @@ Rules:
 - Bullets are `-`.
 - An optional trailing `<!-- tracks: a,b -->` on a bullet keeps it only when rendering with `--track` (bullets without a tag always render). The comment never appears in output.
 - Date ranges use an ASCII hyphen with spaces: `Jul 2023 - Present`.
+# Conversational search and contact metadata
+
+`data/search-plan.json` is an optional, gitignored campaign progress journal
+written by Claude. It records request/criteria/targetCount, source counters,
+selectedJobKeys/rankedJobKeys/trackedJobKeys/enrichedJobKeys, phase and blockers.
+It is not authoritative for jobs or applications; reconcile through the CLI
+on resume. Browser counters persist across campaign batches.
+
+Per-application `outreach.json` retains its existing contacts/searches/messages
+shape. Optional contact fields are `relationship` (first-degree, second-degree,
+third-degree, unknown), `route` (referral, connect, dm, email, unavailable),
+`reason`, `checkedAt`, `status` (not-contacted, connection-pending, connected,
+sent, replied, declined, unknown), `lastContactedAt`, `nextFollowupDate`.
+Optional message fields are `status` (drafted, sent, replied, unknown),
+`sentAt`, `nextFollowupDate`. Timestamps are ISO strings; follow-up dates use
+YYYY-MM-DD. The tracker displays these fields; legacy files default to
+unknown relationship, not-contacted contact and drafted message.
+Claude merges these files, preserving stable IDs and sent history. Contact
+research never changes an application to applied. Actual sends update both
+outreach metadata and the tracker timeline/next action through the CLI.

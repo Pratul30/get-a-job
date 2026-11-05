@@ -59,7 +59,7 @@ function jobRow(ctx, j) {
         j.salary ? [h('span', { class: 'sep' }, '·'), fmtSalary(j.salary)] : null),
       h('div', { class: 'job-chips' },
         h('span', { class: `chip dot el-${j.eligibility}`, title: j.eligibilityReason || label(j.eligibility) }, j.eligibility === 'green' ? 'Eligible' : j.eligibility === 'orange' ? 'Check eligibility' : 'Eligibility unknown'),
-        j.quickFit ? h('span', { class: `chip qf qf-${j.quickFit}`, title: 'Quick fit from /scrape' }, `${label(j.quickFit)} fit`) : null,
+        j.quickFit ? h('span', { class: `chip qf qf-${j.quickFit}`, title: 'Initial fit from job discovery' }, `${label(j.quickFit)} fit`) : null,
         isInternship(j) ? h('span', { class: 'chip kind-intern', title: 'Internship, trainee or fellowship' }, 'Internship') : null,
         j.track ? h('span', { class: 'chip outline', title: `Track: ${trackName(ctx, j.track)}` }, trackName(ctx, j.track)) : null,
         j.funded ? h('span', { class: 'chip funded', title: `Raised ${label(j.funded.round)} on ${j.funded.announcedAt} (gaj funded)` }, `Funded · ${label(j.funded.round)}`) : null,
@@ -75,7 +75,7 @@ function jobRow(ctx, j) {
       h('button', { class: 'btn sm', onclick: () => ctx.openJd(j) }, thinJd(j) ? 'Add JD' : 'Edit JD'),
       !j.outreach ? h('button', { class: 'btn sm', disabled: ctx.taskBusy(), title: 'Find who to contact and draft a referral request and cold DM/email',
         onclick: () => ctx.runTask({ task: 'outreach', key: j.key }, `Outreach for ${j.company}`) }, 'Outreach') : null,
-      !j.rank ? h('button', { class: 'btn sm ghost', disabled: ctx.taskBusy(), title: 'Score this job with Claude (/rank)', onclick: () => ctx.runTask({ task: 'rank', key: j.key }, `Ranking ${j.company}`) }, 'Rank') : null,
+      !j.rank ? h('button', { class: 'btn sm ghost', disabled: ctx.taskBusy(), title: 'Score this job with Claude', onclick: () => ctx.runTask({ task: 'rank', key: j.key }, `Ranking ${j.company}`) }, 'Rank') : null,
       tracked
         ? h('button', { class: 'btn sm ghost', onclick: () => { if (j.applicationId) ctx.openDrawer(j.applicationId); } }, 'Application')
         : [
@@ -95,7 +95,7 @@ function jobRow(ctx, j) {
           h('span', { style: { textTransform: 'capitalize' } }, k), ' ', h('b', null, v), h('div', { class: 'track' }, h('i', { style: { width: `${v}%` } }))))));
       }
     } else {
-      more.append(h('div', { class: 'muted', style: { gridColumn: '1 / -1' } }, 'Not ranked yet. Run /rank in Claude Code for a weighted score, strengths and gaps.'));
+      more.append(h('div', { class: 'muted', style: { gridColumn: '1 / -1' } }, 'Not ranked yet. Ask Claude to rank this job for a weighted score, strengths and gaps.'));
     }
     more.append(h('div', { class: 'muted', style: { gridColumn: '1 / -1' } }, `Eligibility: ${j.eligibilityReason || label(j.eligibility)}`));
     const desc = h('pre', { class: 'job-desc' }, 'Loading description…');
@@ -179,7 +179,7 @@ export function renderJobs(ctx) {
     runBtn),
   ctx.searchStatusBox(ctx));
   if (!ctx.jobs.length) {
-    wrap.append(emptyState({ iconName: 'inbox', title: 'No scraped jobs yet', body: 'Run a search here, or /scrape in Claude Code, to pull fresh postings from your target companies. Then ask Claude to /rank them.', cmds: ['/onboard', '/scrape', '/rank'] }));
+    wrap.append(emptyState({ iconName: 'inbox', title: 'No jobs yet', body: 'Run a search here, or ask Claude to find jobs that fit your profile, rank them and add them to your tracker.' }));
     return wrap;
   }
   const tracks = [...new Set(ctx.jobs.map((j) => j.track).filter(Boolean))];
@@ -204,7 +204,7 @@ export function renderJobs(ctx) {
     }, `New since last digest · ${ctx.jobs.filter((j) => (j.status === 'new' || j.status === 'ranked') && j.firstSeen > ctx.digest.lastDigestAt).length}`) : null,
     h('span', { class: 'count' }, `${list.length} of ${ctx.jobs.length}`)));
   wrap.append(list.length ? h('div', { class: 'jobs' }, list.map((j) => jobRow(ctx, j)))
-    : emptyState({ title: 'Inbox zero', body: 'No jobs match these filters. Loosen them, or run /scrape for more.', actions: [h('button', { class: 'btn sm', onclick: () => { ctx.jobFilters = {}; ctx.saveUi(); ctx.render(); } }, 'Reset filters')] }));
+    : emptyState({ title: 'Inbox zero', body: 'No jobs match these filters. Loosen them, or ask Claude to find more jobs.', actions: [h('button', { class: 'btn sm', onclick: () => { ctx.jobFilters = {}; ctx.saveUi(); ctx.render(); } }, 'Reset filters')] }));
   return wrap;
 }
 
@@ -263,7 +263,7 @@ export function renderStats(ctx) {
   const st = ctx.stats;
   const wrap = h('section', null, h('div', { class: 'view-head' }, h('div', null, h('h1', null, 'Stats'), h('p', null, 'How the search is going. Funnel counts each application at the furthest stage it reached.'))));
   if (!ctx.apps.length) {
-    wrap.append(emptyState({ iconName: 'chart', title: 'No data yet', body: 'Stats appear once you track applications. Start with /scrape and /tailor in Claude Code.', cmds: ['/scrape', '/tailor <url>'] }));
+    wrap.append(emptyState({ iconName: 'chart', title: 'No data yet', body: 'Stats appear once you track applications. Ask Claude to find matching jobs and tailor your resume.' }));
     return wrap;
   }
   if (!st) { wrap.append(h('p', { class: 'muted' }, 'Loading…')); return wrap; }

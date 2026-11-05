@@ -24,11 +24,19 @@ the row's `lastActivityAt` (from `track list --json`; it is the last non-undone
 the clock.
 
 - **Due**: active, last activity ≥ 10 days ago, and fewer than 2 follow-ups
-  recorded (count history notes starting with `followup #`).
+  sent (count confirmed sent follow-ups, not history entries marked drafted).
 - **Maxed**: 2 follow-ups already sent → no more drafts; list them.
 - **Stale**: status `applied`, last activity ≥ 45 days ago.
 
 If `$ARGUMENTS` names a company, limit to it.
+
+Also inspect outreach.json for saved/drafted rows: a referral request or cold
+message can be due even when no application was submitted. Use each message's
+sentAt/nextFollowupDate and recipient, not just the row's activity clock. Skip
+draft-only, unknown-send, replied or declined messages. Pending connection
+requests are reminders to check acceptance, not permission to send another
+request. Preserve original sent text/history; save each follow-up as its own
+message. Count verified sent follow-ups per recipient, not drafted files.
 
 ## 2. Draft
 
@@ -45,10 +53,12 @@ For each due application:
 
 ## 3. Record
 
-Ask the user which drafts they will send. For each confirmed:
+Save drafts with `status: drafted`; drafting is not sending and must not reset
+sentAt or lastContactedAt. When asked to send one, follow send.md, then record
+the confirmed send:
 
 ```bash
-node bin/gaj.js track update <id> --note "followup #<n> drafted <YYYY-MM-DD>" --next-action "await reply" --next-date <today+7>
+node bin/gaj.js track update <id> --note "followup #<n> sent <YYYY-MM-DD>" --next-action "await reply" --next-date <today+7>
 ```
 
 ## 4. Stale sweep
